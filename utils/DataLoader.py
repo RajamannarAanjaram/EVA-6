@@ -80,11 +80,8 @@ class Loader:
         train = CIFAR10(root='./data', train=True,
                         download=True, transform=trainTransform)
         test = CIFAR10(root='./data', download=True, transform=simpleTransform)
-        
-        train ,val = datasplit(train,0.7,0.3)
 
         train_loader = DataLoader(train, shuffle=True, **kwargs)
-        val_loader = DataLoader(val, shuffle=True, **kwargs)
         test_loader = DataLoader(test, shuffle=True, **kwargs)
 
-        return train_loader, val_loader, test_loader
+        return train_loader, test_loader
