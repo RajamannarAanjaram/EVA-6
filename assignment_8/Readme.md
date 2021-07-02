@@ -1,5 +1,5 @@
 <br/>
-<h1 align="center">Session 7: Advanced training Concepts
+<h1 align="center">Session 8: Advanced training Concepts
 <br/>
 <!-- toc -->
     <br>
