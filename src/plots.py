@@ -3,6 +3,7 @@ import torchvision
 from torchvision.utils import make_grid
 import torch
 import numpy as np
+from pytorch_grad_cam.utils.image import show_cam_on_image
 DATA_MEAN = (0.4914, 0.4822, 0.4465)
 DATA_STD = (0.247, 0.2435, 0.2616)
 
@@ -141,3 +142,45 @@ class Plots:
                   break
               if count == 0:
                 break
+
+
+    def plot_grad_cam(cam,images,target_category,denorm):
+    
+
+        # You can also pass aug_smooth=True and eigen_smooth=True, to apply smoothing.
+        grayscale_cam = cam(input_tensor=images, target_category=target_category,aug_smooth=True,eigen_smooth=False)
+        
+        plot_images = torch.clone(images).detach() # Create Copy of Input Images
+        denorm_image_list = list(map(denorm,plot_images)) # Denormalise Images
+        denorm_tensor = torch.stack(denorm_image_list,dim=0) # Create Batched Tensor
+        
+        # Change order for Plotting
+        rgb_tensor  = denorm_tensor.permute(0, 2, 3, 1).cpu().numpy() 
+        images = images.permute(0, 2, 3, 1).cpu().numpy()
+        
+
+        num_images = images.shape[0]
+        fig = plt.figure(figsize=(15, 10))
+        # fig.tight_layout()
+        layout_id =1 
+        
+        
+        for idx,(img,img_cam) in enumerate(zip(images,grayscale_cam)) : 
+            
+            visualization = show_cam_on_image(rgb_tensor[idx], img_cam) #Pass Denorm Image for SuperImposing
+            
+            # Normal Images Plot
+            ax = fig.add_subplot(num_images, 2, layout_id)
+            ax.axis('off')
+            
+            ax.set_title("Actual Image")
+            ax.imshow(img,cmap='gray_r', vmin=0, vmax=255)
+            layout_id+=1
+
+            # Cam Output Plot
+            ax = fig.add_subplot(num_images, 2, layout_id)
+            ax.axis('off')
+            ax.set_title("Cam Image")
+            ax.imshow(visualization,cmap='gray_r', vmin=0, vmax=255)
+            layout_id+=1
+        
