@@ -15,7 +15,6 @@ def datasplit(dataset, trainVol, valVol):
     return subsetA, subsetB
 
 def mean_std():
-    print('\n')
     print('======> Computing mean and std of dataset')
     data = CIFAR10(root='./data', train=True, download=True, transform=tf.ToTensor())
     use_cuda = torch.cuda.is_available()
