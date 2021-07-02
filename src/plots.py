@@ -107,7 +107,7 @@ class Plots:
             ax.axis('off')
             ax.set_title(
                 f'\nactual {classes[target.item()]}\npredicted {classes[pred.item()]}', fontsize=10)
-            ax.imshow(img.transpose(1, 2, 0).squeeze(),
+            ax.imshow(img.transpose(1, 2, 0).squeeze().astype(np.uint8),
                       cmap='gray_r', vmin=0, vmax=255)
           plt.show()
 
