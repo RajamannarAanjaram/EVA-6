@@ -48,19 +48,17 @@ class Loader:
 
     def transform(self):
         DATA_MEAN, DATA_STD = mean_std()
-        trainTransform = A.Compose([
-            A.HorizontalFlip(p=0.3),
-            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=30, interpolation=cv2.INTER_LINEAR,
-                               border_mode=cv2.BORDER_REFLECT_101, always_apply=False, p=0.5),
-            A.CoarseDropout(max_holes=1, max_height=16, max_width=16, min_holes=1, min_height=16,
-                            min_width=16, fill_value=DATA_MEAN, mask_fill_value=None, p=0.3),
-            A.Normalize(DATA_MEAN, DATA_STD),
-            ToTensorV2(),
-        ])
-        simpleTransform = A.Compose([
-            A.Normalize(DATA_MEAN, DATA_STD),
-            ToTensorV2(),
-        ])
+        trainTransform = A.Compose([A.PadIfNeeded(min_height=40, min_width=40, always_apply=True),
+                                      A.RandomCrop(width=32, height=32,p=1),
+                                      A.Rotate(limit=5),
+                                      #A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=5, p=0.25),
+                                      A.CoarseDropout(max_holes=1,min_holes = 1, max_height=16, max_width=16, p=0.5,fill_value=tuple([x * 255.0 for x in DATA_MEAN]),
+                                      min_height=16, min_width=16),
+                                      A.Normalize(mean=DATA_MEAN, std=DATA_STD,always_apply=True),
+                                      ToTensorV2()
+                                    ])
+        simpleTransform = A.Compose([A.Normalize(mean=DATA_MEAN, std=DATA_STD, always_apply=True),
+                                 ToTensorV2()])
         # print(trainTransform,simpleTransform)
         return Transforms(trainTransform), Transforms(simpleTransform)
 
