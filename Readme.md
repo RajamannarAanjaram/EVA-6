@@ -25,3 +25,44 @@
 <!-- toc -->
     
 ## Problem Statement
+
+* Check this Repo out: https://github.com/kuangliu/pytorch-cifar (Links to an external site.)
+* You are going to follow the same structure for your Code from now on. So Create:  
+    * models folder - this is where you'll add all of your future models. Copy resnet.py into this folder, this file should only have ResNet 18/34 models. Delete Bottleneck Class
+    * main.py - from Google Colab, now onwards, this is the file that you'll import (along with model). Your main file shall be able to take these params or you should be able to pull functions from it and then perform operations, like (including but not limited to):
+        1) training and test loops
+        2) data splits between test and train
+        3) epochs
+        4) batch size
+        5) which optimizer to run
+        6) do we run a scheduler?
+    * utils.py file (or a folder later on when it expands) - this is where you will add all of your utilities like:
+        1) image transforms.
+        2) gradcam.
+        3) misclassification code.
+        4) tensorboard related stuff.
+        5) advanced training policies, etc, etc.  
+
+* Name this main repo something, and don't call it Assignment8. This is what you'll import for all the rest of the assignments. Add a proper readme describing all the files.
+
+### **The assignment is to build the above training structure. Train ResNet18 on Cifar10 for 20 Epochs. The assignment must:**
+* Pull your Github code to google colab (don't copy-paste code)
+prove that you are following the above structure
+that the code in your google collab notebook is NOTHING.. barely anything. 
+* There should not be any function or class that you can define in your Google Colab Notebook. Everything must be imported from all of your other files
+* your colab file must:
+  * train resnet18 for 20 epochs on the CIFAR10 dataset
+  * show loss curves for test and train datasets
+  * show a gallery of 10 misclassified images
+  * show gradcam output on 10 misclassified images
+  
+Remember if you are applying GradCAM on a channel that is less than 5px, then please don't bother to submit the assignment. 😡🤬🤬🤬🤬
+
+<br>
+<hr>
+<br>
+
+
+
+
+
