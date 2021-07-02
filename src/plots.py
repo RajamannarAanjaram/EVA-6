@@ -160,7 +160,7 @@ class Plots:
         
 
         num_images = images.shape[0]
-        fig = plt.figure(figsize=(15, 10))
+        fig = plt.figure(figsize=(8, 8))
         # fig.tight_layout()
         layout_id =1 
         
@@ -171,16 +171,16 @@ class Plots:
             
             # Normal Images Plot
             ax = fig.add_subplot(num_images, 2, layout_id)
-            ax.axis('off')
+            # ax.axis('off')
             
-            ax.set_title("Actual Image")
-            ax.imshow(img,cmap='gray_r', vmin=0, vmax=255)
+            ax.set_title("Input Image")
+            ax.imshow(img.astype('uint8'),vmin=0, vmax=255)
             layout_id+=1
 
             # Cam Output Plot
             ax = fig.add_subplot(num_images, 2, layout_id)
-            ax.axis('off')
+            # ax.axis('off')
             ax.set_title("Cam Image")
-            ax.imshow(visualization,cmap='gray_r', vmin=0, vmax=255)
+            ax.imshow(visualization.astype('uint8'),vmin=0, vmax=255)
             layout_id+=1
         
