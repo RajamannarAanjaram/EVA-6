@@ -17,12 +17,12 @@ class CustomBasicBlock(nn.Module):
             nn.Conv2d(in_channels=in_planes, out_channels=out_planes, kernel_size=3, stride=stride, padding=padding),
             nn.MaxPool2d(2,2),
             nn.BatchNorm2d(out_planes),
-            nn.ReLU(inplace=True))
+            nn.ReLU(inplace=False))
 
         self.block_res = nn.Sequential(
             nn.Conv2d(in_channels=in_planes, out_channels=out_planes, kernel_size=3, stride=2, padding=padding),
             nn.BatchNorm2d(out_planes),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=False),
         )
 
     def forward(self, x):
