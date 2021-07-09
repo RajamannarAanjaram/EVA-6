@@ -6,6 +6,7 @@ import numpy as np
 from pytorch_grad_cam.utils.image import show_cam_on_image
 DATA_MEAN = (0.4914, 0.4822, 0.4465)
 DATA_STD = (0.247, 0.2435, 0.2616)
+import numpy as np
 
 
 class Plots:
@@ -184,3 +185,10 @@ class Plots:
             ax.imshow(visualization.astype('uint8'),vmin=0, vmax=255)
             layout_id+=1
         
+
+    def plot_lr_curve(scheduled_lrs,step=500) :
+
+        plt.xlabel("Iterations")
+        plt.ylabel("Learning Rate")
+        plt.xticks(np.arange(0, len(scheduled_lrs), step=step), rotation=90)
+        plt.plot(scheduled_lrs)

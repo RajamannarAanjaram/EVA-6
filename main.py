@@ -5,11 +5,12 @@ import torch.nn.functional as F
 
 
 ## Model training function
-def train(model, device, train_loader, optimizer, train_acc, train_losses):
+def train(model, device, train_loader, optimizer, train_acc, train_losses,scheduler=None):
     model.train()
     pbar = tqdm(train_loader)
     correct = 0
     processed = 0
+    scheduled_lrs = []
     for batch_idx, (data, target) in enumerate(pbar):
         data = data["image"].to(device)
         target = target.to(device)
@@ -31,9 +32,16 @@ def train(model, device, train_loader, optimizer, train_acc, train_losses):
         correct += pred.eq(target.view_as(pred)).sum().item()
         processed += len(data)
 
+        if scheduler is not None :
+            scheduler.step()
+            # print(scheduler.get_last_lr())
+            scheduled_lrs.append(scheduler.get_last_lr())
+
         pbar.set_description(
             desc=f'Loss={loss.item()} Batch_id={batch_idx} Accuracy={100*correct/processed:0.2f}')
     train_acc.append(100*correct/processed)
+
+    return scheduled_lrs
 
 
 def test(model, device, test_loader, test_acc, test_losses):
