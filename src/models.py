@@ -4,6 +4,9 @@ import torch.nn.functional as F
 from torchsummary.torchsummary import summary
 
 class BasicBlock(nn.Module):
+    '''
+    The Basic Residual block for the resnet architecture
+    '''
     expansion = 1
 
     def __init__(self, in_planes, planes, stride=1):
@@ -28,10 +31,18 @@ class BasicBlock(nn.Module):
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
         out = F.relu(out)
-        return out    
+        return out
 
 class ResNet(nn.Module):
+    '''
+    The Actual resnet Architecture designed
+    '''
     def __init__(self, block, num_blocks, num_classes=10):
+        '''
+        block       -> The instance of the basic Residual block
+        num_blocks  -> The number of residual blocks required
+        num_classes -> The number of output classes
+        '''
         super(ResNet, self).__init__()
         self.in_planes = 64
 
@@ -46,6 +57,12 @@ class ResNet(nn.Module):
         self.linear = nn.Linear(512*block.expansion, num_classes)
 
     def _make_layer(self, block, planes, num_blocks, stride):
+        '''
+        block       -> The instance of the basic Residual block
+        planes      -> number of out_planes
+        num_blocks  -> The number of residual blocks required
+        num_classes -> The number of output classes
+        '''
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:

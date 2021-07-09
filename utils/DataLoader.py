@@ -10,11 +10,32 @@ from utils.helper import get_mean_std
 
 
 def datasplit(dataset, trainVol, valVol):
+    '''
+    datasplit => Random split of data as training data and test data
+
+    keyword Arguments:
+    dataset   -> Downloaded dataset to be split
+    trainVol  -> length of split to be generated for training
+    valVol    -> length of split to be generated for testing/Validation
+
+    return:
+    subsetA -> new dataset with specified length
+    subsetB -> new dataset with specified length
+    '''
     lengths = [int(len(dataset)*trainVol), int(len(dataset)*valVol)]
     subsetA, subsetB = random_split(dataset, lengths)
     return subsetA, subsetB
 
 def mean_std():
+    '''
+    mean_std => Computing mean and std of dataset
+
+    Keyword Arguments:
+    NA
+
+    return:
+    get_mean_std(train_loader, num_channels=3) -> invoked to calculate mean and std of data
+    '''
     print('======> Computing mean and std of dataset')
     data = CIFAR10(root='./data', train=True, download=True, transform=tf.ToTensor())
     use_cuda = torch.cuda.is_available()
@@ -27,26 +48,45 @@ def mean_std():
 
     train_loader = DataLoader(data, shuffle=True,
                               drop_last=True, **kwargs)
-    
+
     return get_mean_std(train_loader, num_channels=3)
-                        
+
 
 
 class Transforms:
+    ''' The class Transforms defined for common image transformations'''
     def __init__(self, transforms: A.Compose):
         self.transforms = transforms
 
     def __call__(self, img, *args, **kwargs):
+        '''
+        Keword Arguments:
+        img  -> image to be transformed
+
+        return:
+        Image converted into Numpy Array in Height, Width, Channel format
+        '''
         return self.transforms(image=np.array(img))
 
 
 class Loader:
+    '''The class Loader is defined for loading the data for the model'''
     def __init__(self,batch_size):
 
         self.text = 'This class loads the data for the model'
         self.batch_size = batch_size
 
     def transform(self):
+        '''
+        transform  => image transformations such as shifting, scaling, rotating and albumnations etc
+
+        Keyword Arguments:
+        NA
+
+        return:
+        trainTransform   -> The series of data augmentation used for composing the final transform
+        simpleTransform  -> general normalization of data.
+        '''
         DATA_MEAN, DATA_STD = mean_std()
         trainTransform = A.Compose([A.PadIfNeeded(min_height=40, min_width=40, always_apply=True),
                                       A.RandomCrop(width=32, height=32,p=1),
@@ -62,9 +102,21 @@ class Loader:
         # print(trainTransform,simpleTransform)
         return Transforms(trainTransform), Transforms(simpleTransform)
 
-    
+
 
     def Loader(self, trainTransform, simpleTransform, cuda: bool = True):
+        '''
+        Loader => For downloading the dataset required
+
+        Keyword Arguments:
+        trainTransform  -> image transformations defined
+        simpleTransform -> image transformations defined
+        cuda: bool      -> boolean to use CUDA
+
+        return:
+        train_loader -> Dataloader for Training dataset
+        test_loader -> Dataloader for Testing/Validation dataset
+        '''
         seed = 42
         if cuda:
             torch.cuda.manual_seed(seed)

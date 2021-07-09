@@ -4,6 +4,25 @@ from main import *
 
 
 def learner(model, train_loader, test_loader, epochs, optimiser, scheduler, device):
+  '''
+  learner => Complete testing and training of the model
+
+  Keyword Arguments:
+  model       -> The actual model designed
+  train_loader-> The shuffled training dataset
+  test_loader -> The shuffled testing dataset
+  epochs      -> Number of epochs for training and testing
+  optimiser   -> Type optimiser used (ex: Adam/SGD)
+  Scheduler   -> LR scheduler
+  device      -> Device configuration to which inputs/targets are being sent
+
+  return:
+  train_acc     -> training accuracy rate
+  train_losses  -> training losses
+  test_acc      -> testing accuracy rate
+  test_losses   -> testing losses
+  model         -> The actual model designed
+  '''
     train_losses = []
     test_losses = []
     train_acc = []

@@ -2,6 +2,13 @@ from tqdm import tqdm
 import torch
 
 def get_mean_std(loader, num_channels):
+    '''
+    get_mean_std => computes mean and standard deviation
+
+    Keyword Arguments:
+    loader       -> Training datasets
+    num_channels -> number of channels in the dataset (RGB)
+    '''
     channels_sum, channels_sqrd_sum, num_batches = 0, 0, 0
 
     for data, _ in tqdm(loader):

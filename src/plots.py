@@ -9,10 +9,25 @@ DATA_STD = (0.247, 0.2435, 0.2616)
 
 
 class Plots:
+  '''
+  The Class Plots is defined for...
+  1. Visualization of dataset used
+  2. model behavior
+  3. Visualization of Missclassified images
+  '''
     def __init__(self):
         pass
 
     def sampleVisual(dataset):
+      '''
+      sampleVisual => General Visualization of dataset
+
+      Keyword Arguments:
+      dataset -> dataset used for training the model
+
+      return:
+      NA
+      '''
         batch = next(iter(dataset))
         images, labels = batch
         images = images["image"]
@@ -65,6 +80,18 @@ class Plots:
             return len(wrong_predictions)
 
     def stat_graph(train_acc, train_losses, test_acc, test_losses):
+      '''
+      stat_graph => Visualization of Accuracy and Loss rate of Training and Testing
+
+      Keyword Arguments:
+      train_acc     -> Training accuarcy rate
+      train_losses  -> Training Loss rate
+      test_acc      -> Testing/validation Accuracy rate
+      test_losses   -> Testing/validation Loss rate
+
+      return:
+      NA
+      '''
       fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(14, 10))
       ax1 = ax[0, 0]
       ax1.set_title("TrainAccuracy")
@@ -81,6 +108,17 @@ class Plots:
       plt.show()
 
     def miscImages(model, test_loader, device):
+      '''
+      miscImages => Visualization of miss classfied images
+
+      Keyword Arguments:
+      model       -> The actual model designed
+      test_loader -> The shuffled dataset for testing the model
+      device      -> Device configuration to which inputs/targets are being sent
+
+      return:
+      NA
+      '''
       classes = ('plane', 'car', 'bird', 'cat',
                  'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
       wrong_images = []
@@ -145,34 +183,46 @@ class Plots:
 
 
     def plot_grad_cam(cam,images,target_category,denorm):
-    
+        '''
+        plot_grad_cam => Visualization of Gradcam for a particular image
+
+        Keyword Arguments:
+        cam             -> The cam object constructed using the model
+        images          -> images from test dataset
+        target_category ->
+        denorm          -> denormalising the images
+
+        return:
+        NA
+        '''
+
 
         # You can also pass aug_smooth=True and eigen_smooth=True, to apply smoothing.
         grayscale_cam = cam(input_tensor=images, target_category=target_category,aug_smooth=True,eigen_smooth=False)
-        
+
         plot_images = torch.clone(images).detach() # Create Copy of Input Images
         denorm_image_list = list(map(denorm,plot_images)) # Denormalise Images
         denorm_tensor = torch.stack(denorm_image_list,dim=0) # Create Batched Tensor
-        
+
         # Change order for Plotting
-        rgb_tensor  = denorm_tensor.permute(0, 2, 3, 1).cpu().numpy() 
+        rgb_tensor  = denorm_tensor.permute(0, 2, 3, 1).cpu().numpy()
         images = images.permute(0, 2, 3, 1).cpu().numpy()
-        
+
 
         num_images = images.shape[0]
         fig = plt.figure(figsize=(8, 8))
         # fig.tight_layout()
-        layout_id =1 
-        
-        
-        for idx,(img,img_cam) in enumerate(zip(images,grayscale_cam)) : 
-            
+        layout_id =1
+
+
+        for idx,(img,img_cam) in enumerate(zip(images,grayscale_cam)) :
+
             visualization = show_cam_on_image(rgb_tensor[idx], img_cam) #Pass Denorm Image for SuperImposing
-            
+
             # Normal Images Plot
             ax = fig.add_subplot(num_images, 2, layout_id)
             # ax.axis('off')
-            
+
             ax.set_title("Input Image")
             ax.imshow(img.astype('uint8'),vmin=0, vmax=255)
             layout_id+=1
@@ -183,4 +233,3 @@ class Plots:
             ax.set_title("Cam Image")
             ax.imshow(visualization.astype('uint8'),vmin=0, vmax=255)
             layout_id+=1
-        
