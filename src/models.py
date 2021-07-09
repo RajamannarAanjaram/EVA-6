@@ -28,8 +28,7 @@ class BasicBlock(nn.Module):
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
         out = F.relu(out)
-        return out
-    
+        return out    
 
 class ResNet(nn.Module):
     def __init__(self, block, num_blocks, num_classes=10):
