@@ -12,28 +12,29 @@ class CustomBasicBlock(nn.Module):
     """
     expansion=1
     def __init__(self, in_planes, out_planes, stride=1, padding=1):
-        self.convolution = nn.Sequential(
+        super(CustomBasicBlock, self).__init__()
+        self.block1 = nn.Sequential(
             nn.Conv2d(in_channels=in_planes, out_channels=out_planes, kernel_size=3, stride=stride, padding=padding),
+            nn.MaxPool2d(2,2),
+            nn.BatchNorm2d(out_planes),
+            nn.ReLU(inplace=True))
+
+        self.block_res = nn.Sequential(
+            nn.Conv2d(in_channels=in_planes, out_channels=out_planes, kernel_size=3, stride=2, padding=padding),
             nn.BatchNorm2d(out_planes),
             nn.ReLU(inplace=True),
         )
 
-        self.shortcut = nn.Sequential()
-        if stride != 1 or in_planes != self.expansion*out_planes:
-            self.shortcut = nn.Sequential(
-                nn.Conv2d(in_planes, self.expansion*out_planes,
-                          kernel_size=1, stride=stride, padding=padding, bias=False),
-                nn.BatchNorm2d(self.expansion*out_planes),
-            )
     def forward(self, x):
-        out = self.convolution(x)
-        out += self.shortcut(x)
+        x_out = self.block1(x)
+        out = self.block_res(x)
+        out += x_out
         out = F.relu(out)
         return out
 
 
 class CustomResNet(nn.Module):
-    def __init_(self, block, num_classes=10):
+    def __init__(self, block, num_classes=10):
         super(CustomResNet, self).__init__()
         self.prep_layer = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
