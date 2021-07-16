@@ -66,8 +66,8 @@ class ResNet(nn.Module):
         return out
 
 class ModelLoader():
-    def modelsummary(version,inputsize):
+    def modelsummary(version,inputsize,num_classes=10):
         use_cuda = torch.cuda.is_available()
         device = 'cuda:0' if use_cuda else 'cpu'
-        model = ResNet(BasicBlock, version).to(device)
+        model = ResNet(BasicBlock, version,num_classes).to(device)
         return model, summary(model, input_size=inputsize)

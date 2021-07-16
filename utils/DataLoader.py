@@ -7,6 +7,9 @@ from torch.utils.data import DataLoader,random_split
 import torchvision.transforms as tf
 import numpy as np
 from utils.helper import get_mean_std
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+import torch.utils.data as data
 
 
 def datasplit(dataset, trainVol, valVol):
@@ -14,9 +17,14 @@ def datasplit(dataset, trainVol, valVol):
     subsetA, subsetB = random_split(dataset, lengths)
     return subsetA, subsetB
 
-def mean_std():
+def mean_std(dataset):
     print('======> Computing mean and std of dataset')
-    data = CIFAR10(root='./data', train=True, download=True, transform=tf.ToTensor())
+    if dataset == "TINYIMAGENET" :
+        train_dir = './tiny-imagenet-200/train'
+        data = datasets.ImageFolder(train_dir, transform=transforms.ToTensor())
+    else : 
+        data = CIFAR10(root='./data', train=True, download=True, transform=tf.ToTensor())
+
     use_cuda = torch.cuda.is_available()
     if use_cuda:
         torch.cuda.manual_seed(40)
@@ -41,19 +49,23 @@ class Transforms:
 
 
 class Loader:
-    def __init__(self,batch_size):
+    def __init__(self,batch_size,data="CIFAR"):
 
         self.text = 'This class loads the data for the model'
         self.batch_size = batch_size
+        self.data=data
 
     def transform(self):
-        DATA_MEAN, DATA_STD = mean_std()
+        DATA_MEAN, DATA_STD = mean_std(self.data)
         trainTransform = A.Compose([A.PadIfNeeded(min_height=40, min_width=40, always_apply=True),
                                       A.RandomCrop(width=32, height=32,p=1),
                                       A.Rotate(limit=5),
                                       #A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=5, p=0.25),
-                                      A.CoarseDropout(max_holes=1,min_holes = 1, max_height=16, max_width=16, p=0.5,fill_value=tuple([x * 255.0 for x in DATA_MEAN]),
-                                      min_height=16, min_width=16),
+                                    #   A.CoarseDropout(max_holes=1,min_holes = 1, max_height=16, max_width=16, p=0.5,fill_value=tuple([x * 255.0 for x in DATA_MEAN]),
+                                    #   min_height=16, min_width=16),
+                                      A.HorizontalFlip(p=0.3),
+                                      A.VerticalFlip(p=0.1),
+                                      A.RandomBrightnessContrast(p=0.2),
                                       A.Normalize(mean=DATA_MEAN, std=DATA_STD,always_apply=True),
                                       ToTensorV2()
                                     ])
@@ -74,9 +86,18 @@ class Loader:
             torch.manual_seed(seed)
             kwargs = {'batch_size': self.batch_size}
 
-        train = CIFAR10(root='./data', train=True,
-                        download=True, transform=trainTransform)
-        test = CIFAR10(root='./data', download=True, transform=simpleTransform)
+        if self.data == "TINYIMAGENET" :
+            
+            train_dir = './tiny-imagenet-200/train'
+            test_dir = './tiny-imagenet-200/val'
+            train = datasets.ImageFolder(train_dir, transform=trainTransform)
+            test = datasets.ImageFolder(test_dir, transform=simpleTransform)
+            
+        else :
+
+            train = CIFAR10(root='./data', train=True,
+                            download=True, transform=trainTransform)
+            test = CIFAR10(root='./data', download=True, transform=simpleTransform)
 
         train_loader = DataLoader(train, shuffle=True, **kwargs)
         test_loader = DataLoader(test, shuffle=True, **kwargs)

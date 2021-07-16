@@ -73,8 +73,8 @@ class CustomResNet(nn.Module):
 
 
 class ModelLoader():
-    def modelsummary(inputsize):
+    def modelsummary(inputsize,num_classes=10):
         use_cuda = torch.cuda.is_available()
         device = 'cuda:0' if use_cuda else 'cpu'
         model = CustomResNet(CustomBasicBlock).to(device)
-        return model, summary(model, input_size=inputsize)
+        return model, summary(model, input_size=inputsize,num_classes=num_classes)
