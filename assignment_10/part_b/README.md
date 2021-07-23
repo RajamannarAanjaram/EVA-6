@@ -48,18 +48,16 @@ bbox - Bounding Box in COCO format (x, y, width, height)
 ```
     
 #### Anchor Box and K-values
-<!--  <div class="row">
-  <div class="column">
-    <img src="./images/ct1.png" style="width:8%">
-    <img src="./images/ct1.png" style="width:8%">
-    <img src="./images/ct1.png" style="width:8%">
-  </div>
-</div>  -->
+    
+**What are Anchor Boxes**<br/>
+    Anchor boxes are nothing but template bounding boxes. Object detection models utilize the anchor boxes to make beter bounding box predictions. YOLO V2 and V3 comes with a set of pre-defined anchor boxes which may not work out of box for custom data. Defining anchor boxes for the custom data will tune the model better and increase object detection accuracy
+    
+    
 <p align="center">
-  <img width="225" height="225" src="./images/ct1.png">
-  <img width="225" height="225" src="./images/ct2.png">
-  <img width="225" height="225" src="./images/ct3.png">
-  <img width="225" height="225" src="./images/ct4.png">
+  <img width="230" height="225" src="./images/ct1.png">
+  <img width="230" height="225" src="./images/ct2.png">
+  <img width="230" height="225" src="./images/ct3.png">
+  <img width="230" height="225" src="./images/ct4.png">
 </p>
 
  <div class="row">
@@ -67,3 +65,12 @@ bbox - Bounding Box in COCO format (x, y, width, height)
     <img src="./images/bb6.png" alt="Snow" style="width:100%">
   </div>
 </div>  
+    
+#### Mean IoU and Centroid
+<p align="center">
+  <img width="460" height="300" src="./images/iou.png">
+  <img width="460" height="300" src="./images/clusters.png">
+</p>
+
+#### References
+https://gist.github.com/jinyu121/e530dc9767d8f83c08f3582c71a5cbc8
